@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0f0f1e">
+<title>Ficha — Lord of Mysteries</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0f0f1e;--bg2:#1a1a2e;--bg3:#252540;--gold:#d4af37;--text:#e8e8f0;--dim:#8a8aa0;--green:#4ade80;--red:#ef4444;--blue:#60a5fa;--purple:#a78bfa}
+html,body{height:100%;margin:0;padding:0;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.4;display:flex;flex-direction:column}
+header{background:linear-gradient(180deg,var(--bg2),var(--bg));padding:12px 16px;border-bottom:1px solid var(--bg3);flex-shrink:0;z-index:10}
+header h1{font-size:15px;color:var(--gold);font-weight:600}
+header .sub{font-size:12px;color:var(--dim);margin-top:3px}
+main{flex:1;overflow:hidden;position:relative}
+.tab{display:none;position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px}
+.tab.active{display:block}
+nav{background:var(--bg2);border-top:1px solid var(--bg3);display:flex;flex-shrink:0;z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;background:none;border:none;color:var(--dim);padding:10px 2px 8px;font-size:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:500}
+nav button.active{color:var(--gold)}
+nav button .ico{font-size:18px;line-height:1}
+.card{background:var(--bg2);border:1px solid var(--bg3);border-radius:10px;padding:12px;margin-bottom:10px}
+.card h2{font-size:13px;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600}
+.row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bg3);gap:8px}
+.row:last-child{border-bottom:none}
+.row .lbl{font-size:14px;flex:1}
+.row .val{font-size:15px;color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums}
+input,select{background:var(--bg3);border:1px solid var(--bg3);color:var(--text);padding:8px 10px;border-radius:6px;font-size:15px;font-family:inherit;outline:none;width:100%}
+input:focus,select:focus{border-color:var(--gold)}
+select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 15px) 50%,calc(100% - 10px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:30px}
+.attr{display:grid;grid-template-columns:1fr 55px 55px 55px;gap:5px;padding:6px 0;align-items:center}
+.attr .nm{font-size:14px}
+.attr input{text-align:center;padding:6px}
+.attr .tot{text-align:center;color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums;padding:6px 3px;background:var(--bg3);border-radius:6px;font-size:13px}
+.skill{padding:8px 0}
+.skill .top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.skill .nm{font-size:14px;flex:1}
+.skill .bonus{font-size:13px;color:var(--gold);font-weight:600;background:var(--bg3);padding:3px 8px;border-radius:4px;min-width:38px;text-align:center}
+.skill select{font-size:13px;padding:6px 28px 6px 8px}
+.ability{padding:10px;background:var(--bg3);border-radius:8px;margin-bottom:8px;cursor:pointer}
+.ability .head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ability .nm{font-size:14px;font-weight:600;flex:1}
+.ability .seq{font-size:11px;color:var(--gold);background:var(--bg2);padding:2px 6px;border-radius:3px}
+.ability .meta{font-size:12px;color:var(--dim);margin-top:6px;display:flex;gap:8px;flex-wrap:wrap}
+.ability .desc{font-size:13px;margin-top:8px;line-height:1.5;display:none;padding-top:8px;border-top:1px solid var(--bg2)}
+.ability.open .desc{display:block}
+.tabs-top{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.tabs-top::-webkit-scrollbar{display:none}
+.tabs-top button{background:var(--bg3);border:1px solid var(--bg3);color:var(--dim);padding:6px 12px;border-radius:16px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:inherit}
+.tabs-top button.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.empty{text-align:center;color:var(--dim);padding:30px 20px;font-size:13px}
+.bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin:6px 0}
+.bar>div{height:100%;background:var(--gold);transition:width .2s}
+.bar.hp>div{background:var(--green)}
+.bar.san>div{background:var(--purple)}
+.bar.esp>div{background:var(--blue)}
+.bar.warn>div{background:var(--red)}
+.quick{display:flex;gap:6px}
+.quick button{flex:1;background:var(--bg3);border:1px solid var(--bg3);color:var(--text);padding:6px;border-radius:6px;font-size:14px;cursor:pointer;font-family:inherit}
+.quick button:active{background:var(--gold);color:var(--bg)}
+.btn{background:var(--gold);color:var(--bg);border:none;padding:10px 16px;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;font-size:14px}
+.hint{font-size:11px;color:var(--dim);margin-top:6px;line-height:1.5}
+.alert{padding:10px;border-radius:8px;font-size:13px;margin-top:8px;font-weight:500}
+.alert.warn{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.alert.ok{background:rgba(74,222,128,.15);color:#86efac;border:1px solid rgba(74,222,128,.3)}
+.item-row{background:var(--bg3);border-radius:8px;padding:8px;margin-bottom:8px}
+.item-row .item-head{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.item-row .item-grid{display:grid;grid-template-columns:1fr 60px;gap:6px}
+.item-row input,.item-row select{font-size:13px;padding:6px 8px}
+.item-row .del{background:var(--red);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:15px;cursor:pointer;font-family:inherit;font-weight:600}
+
+.catalog-cat{font-size:12px;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;margin:14px 0 6px;font-weight:700;border-bottom:1px solid rgba(212,175,55,.4);padding-bottom:4px}
+.catalog-item{padding:8px 0;border-bottom:1px solid var(--bg3);font-size:13px}
+.catalog-item .n{color:var(--text);font-weight:600}
+.catalog-item .s{color:var(--dim);font-size:12px;margin-top:2px;line-height:1.5}
+
+.catalog-item.with-btn{display:flex;align-items:flex-start;gap:8px;justify-content:space-between}
+.catalog-item .cat-text{flex:1;min-width:0}
+.cat-add{background:var(--gold);color:var(--bg);border:none;width:32px;height:32px;border-radius:16px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;line-height:1;padding:0}
+.cat-add:active{background:#b8942b}
+
+</style>
+</head>
+<body>
+<header>
+  <h1 id="hdrTitle">Ficha — Lord of Mysteries</h1>
+  <div class="sub" id="hdrSub">Toque em "Ficha" para começar</div>
+</header>
+<main>
+  <section id="tab-ficha" class="tab active">
+    <div class="card">
+      <h2>Identidade</h2>
+      <div style="display:grid;gap:8px">
+        <input id="pName" placeholder="Nome do personagem">
+        <input id="pPlayer" placeholder="Jogador">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <select id="pPath"></select>
+          <select id="pSeq"><option value="">Seq…</option><option value="9">9</option><option value="8">8</option><option value="7">7</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Atributos</h2>
+      <div class="attr" style="font-size:11px;color:var(--dim);text-transform:uppercase">
+        <div>Atributo</div><div style="text-align:center">Base</div><div style="text-align:center">Poção</div><div style="text-align:center">Total</div>
+      </div>
+      <div id="attrs"></div>
+      <div class="hint" id="loadPenaltyHint"></div>
+    </div>
+    <div class="card"><h2>Recursos</h2><div id="resources"></div></div>
+    <div class="card"><h2>Defesas e Movimento</h2><div id="defenses"></div></div>
+    <div class="card">
+      <h2>Dados rápidos</h2>
+      <div class="row"><span class="lbl">Dado de dano de Força</span><span class="val" id="dmgDie">—</span></div>
+      <div class="row"><span class="lbl">Espaços teóricos</span><span class="val" id="slots">—</span></div>
+      <div class="row"><span class="lbl">Nível Beyonder</span><span class="val" id="beyLvl">—</span></div>
+    </div>
+    <div class="card">
+      <h2>Dados salvos</h2>
+      <div class="quick">
+        <button onclick="exportJSON()">📤 Exportar</button>
+        <button onclick="document.getElementById('importFile').click()">📥 Importar</button>
+        <button onclick="resetAll()" style="color:var(--red)">🗑️ Zerar</button>
+      </div>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+    </div>
+  </section>
+  <section id="tab-pericias" class="tab">
+    <div class="tabs-top" id="skillTabs"></div>
+    <div id="skills"></div>
+  </section>
+  <section id="tab-habilidades" class="tab">
+    <div class="card">
+      <h2>Filtro</h2>
+      <input id="abSearch" placeholder="Buscar habilidade…">
+      <div style="font-size:12px;color:var(--dim);margin-top:6px" id="abInfo">Escolha caminho e sequência na Ficha</div>
+    </div>
+    <div id="abilities"></div>
+  </section>
+  <section id="tab-equip" class="tab">
+    <div class="card">
+      <h2>Armadura</h2>
+      <div class="row"><span class="lbl">Tipo</span><select id="armorSel" style="width:60%;font-size:13px"></select></div>
+      <div id="armorInfo"></div>
+    </div>
+    <div class="card">
+      <h2>Vestimenta</h2>
+      <div class="row"><span class="lbl">Roupa</span><select id="clothesSel" style="width:60%;font-size:13px"></select></div>
+      <div class="row"><span class="lbl">Bolsos usados</span><input id="clothesPockets" type="number" inputmode="numeric" style="width:70px;text-align:center"></div>
+      <div class="row"><span class="lbl">Bolsa/Mochila</span><select id="bagSel" style="width:60%;font-size:13px"></select></div>
+      <div class="row"><span class="lbl">Bolsos ocultos usados</span><input id="bagHidden" type="number" inputmode="numeric" style="width:70px;text-align:center"></div>
+      <div class="hint" id="clothesInfo"></div>
+    </div>
+    <div class="card">
+      <h2>Capacidade</h2>
+      <div class="row"><span class="lbl">Espaços teóricos (Força×2)</span><span class="val" id="capTheory">—</span></div>
+      <div class="row"><span class="lbl">Espaços ocupados</span><span class="val" id="capUsed">—</span></div>
+      <div class="row"><span class="lbl">Espaços reais (roupa+bolsa)</span><span class="val" id="capReal">—</span></div>
+      <div class="bar" id="capBar"><div></div></div>
+      <div id="capMsg"></div>
+    </div>
+    <div class="card">
+      <h2>Itens</h2>
+      <div id="itemsList"></div>
+      <button class="btn" id="addItemBtn" style="width:100%;margin-top:8px">+ Adicionar item</button>
+    </div>
+  </section>
+
+  <section id="tab-catalogo" class="tab">
+    <div class="card">
+      <h2>Buscar</h2>
+      <input id="catSearch" placeholder="Nome da arma, armadura, dano…">
+    </div>
+    <div id="catalog"></div>
+  </section>
+  
+</main>
+<nav>
+  <button data-tab="ficha" class="active"><span class="ico">📋</span>Ficha</button>
+  <button data-tab="pericias"><span class="ico">🎯</span>Perícias</button>
+  <button data-tab="habilidades"><span class="ico">🌙</span>Habil.</button>
+  <button data-tab="equip"><span class="ico">🎒</span>Equip.</button>
+  <button data-tab="catalogo"><span class="ico">⚔️</span>Catálogo</button>
+</nav>
+<script>
+var PATHS=["Vidente","Aprendiz","Saqueador","Espectador","Marinheiro","Sol","Leitor","Enforcado","Coletor de Cadaveres","Noite Eterna","Guerreiro","Advogado","Arbitro","Cacador","Assassino","Criminoso","Prisioneiro","Espreitador de Misterios","Generalista","Boticario","Plantador","Monstro"];
+var SEQ_DATA=`Vidente|9|Vidente|0|0|0|0|2|0|0|0
+Vidente|8|Palhaço|1|2|2|0|1|0|0|0
+Vidente|7|Mágico|0|2|0|0|1|0|0|0
+Aprendiz|9|Aprendiz|0|0|0|0|2|0|0|0
+Aprendiz|8|Mestre de Truques|0|1|2|0|2|0|0|0
+Aprendiz|7|Astrólogo|0|0|0|0|2|0|0|0
+Saqueador|9|Saqueador|1|1|2|0|1|0|0|0
+Saqueador|8|Trapaceiro|0|2|1|0|1|0|0|0
+Saqueador|7|—|0|0|0|0|0|0|0|0
+Espectador|9|Espectador|0|0|0|0|2|1|0|0
+Espectador|8|Telepata|0|0|0|0|2|1|0|0
+Espectador|7|Psiquiatra|1|1|1|0|1|0|0|0
+Marinheiro|9|Marinheiro|1|1|1|0|0|0|0|0
+Marinheiro|8|Raivoso|1|1|1|0|0|0|0|0
+Marinheiro|7|Navegador|1|1|1|0|2|0|0|0
+Sol|9|Bardo|1|1|1|0|1|0|0|0
+Sol|8|Suplicante da Luz|1|1|1|0|1|0|0|0
+Sol|7|Sumo Sacerdote Solar|1|1|1|0|1|0|0|0
+Leitor|9|Leitor|0|0|0|0|2|0|0|0
+Leitor|8|Aprendiz de Dedução|0|0|0|0|2|0|0|0
+Leitor|7|Detetive|1|1|2|0|1|0|0|0
+Enforcado|9|Suplicante de Segredos|0|0|0|0|2|0|0|0
+Enforcado|8|Ouvinte|0|0|0|1|2|0|0|0
+Enforcado|7|Asceta das Sombras|0|0|0|0|0|0|0|0
+Coletor de Cadaveres|9|Coletor de Cadáveres|1|1|1|0|1|0|0|0
+Coletor de Cadaveres|8|Coveiro|1|1|2|0|1|0|0|0
+Coletor de Cadaveres|7|Médium Espiritual|1|1|1|0|2|0|0|0
+Noite Eterna|9|Sem Sono|1|1|1|0|1|0|0|0
+Noite Eterna|8|Poeta da Meia-Noite|1|1|1|0|2|0|0|0
+Noite Eterna|7|Pesadelo|1|1|1|0|2|0|0|0
+Guerreiro|9|Guerreiro|1|1|2|0|0|0|0|0
+Guerreiro|8|Gladiador|1|1|2|0|1|0|0|0
+Advogado|9|Advogado|0|0|0|0|2|0|0|0
+Advogado|8|Bárbaro|2|1|1|2|0|0|0|0
+Advogado|7|Subornador|1|1|1|0|1|0|0|0
+Arbitro|9|Árbitro|1|1|1|0|1|0|0|0
+Arbitro|8|Xerife|1|1|1|0|1|0|0|0
+Arbitro|7|Interrogador|1|1|2|0|0|0|0|0
+Cacador|9|Caçador|2|1|1|0|1|0|0|0
+Cacador|7|Piromaníaco|1|1|1|0|2|0|0|0
+Assassino|9|Assassino|2|2|1|0|0|0|0|0
+Assassino|8|Instigador|0|0|0|0|2|1|0|0
+Assassino|7|Bruxa|1|1|1|0|1|2|0|0
+Criminoso|9|Criminoso|1|1|2|0|1|0|0|0
+Criminoso|8|Anjo Caído|1|1|2|0|1|0|0|0
+Criminoso|7|Assassino em Série|1|2|2|0|2|0|0|0
+Prisioneiro|9|Prisioneiro|1|0|2|2|1|0|1|0
+Prisioneiro|8|Lunático|1|0|1|0|2|0|0|0
+Prisioneiro|7|Lobisomem|1|1|1|0|0|0|0|0
+Espreitador de Misterios|9|Espreitador de Mistérios|0|0|0|0|2|0|0|0
+Espreitador de Misterios|8|Acadêmico de Combate|0|0|0|0|2|0|0|0
+Generalista|9|Generalista|0|0|0|0|2|0|0|0
+Generalista|8|Arqueólogo|1|1|2|0|0|0|0|0
+Generalista|7|Avaliador|0|0|0|0|2|0|0|0
+Boticario|9|Boticário|0|0|0|0|2|0|0|0
+Boticario|8|Domador de Feras|2|2|2|0|0|0|0|0
+Boticario|7|Vampiro|2|2|2|0|1|2|0|0
+Plantador|9|Plantador|2|1|2|0|1|0|0|0
+Plantador|8|Médico|1|1|2|0|1|0|0|0
+Plantador|7|Sacerdote da Colheita|2|1|2|0|1|0|0|0
+Monstro|9|Monstro|0|0|0|0|2|0|0|0
+Monstro|8|Robô|1|1|2|0|2|0|0|0
+Monstro|7|Sortudo|0|0|0|0|1|0|0|3`.trim().split("\n").map(function(l){return l.split("|")});
+var ABILITIES=`Vidente|9|Adivinhação|2 esp|1 ação de conjuração|Variável|Teste Ocultismo; CD 15/20/25/30 revela cada vez mais
+Vidente|9|Domínio de Ritual|—|Passiva|—|Habilita magia ritualística
+Vidente|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos Etéreo/Espiritual/Mental; +2 Intuição Espiritual
+Vidente|8|Percepção de Perigo|—|Passiva|Própria|Teste Intuição CD 15 evita surpresas; +4 Def. Física temporário
+Vidente|8|Transformar Papel em Lâminas|—|1 ação de ataque|Arremesso|1d4 + ½ dado de Força; até 3 lâminas (-2/-4)
+Vidente|8|Domínio Muscular|—|Passiva|Própria|+2 em testes musculares; furtividade silenciosa; Esquiva Rápida
+Vidente|7|Transferência de Dano|2 esp|1 ação de conjuração|Toque|Move ferimento entre partes do corpo do alvo
+Vidente|7|Salto em Chamas|3 esp|1 ação rápida|30 m|Teleporte entre chamas conhecidas
+Vidente|7|Manipulação de Fogo|1 esp|1 ação de conjuração|30 m|Controla chamas; múltiplos usos
+Vidente|7|Projétil de Ar|1 esp|1 ação de conjuração|Visão|1d8 físico; até 3 projéteis; ignora Des/Esq
+Vidente|7|Substituto de Papel|5 esp|1 ação livre|8 m|Anula 1 ataque; troca de lugar com boneco
+Vidente|7|Criação de Ilusões|2 esp|1 ação de conjuração|8 m raio|Ilusão sensorial completa
+Vidente|7|Respiração Subaquática Falsa|1 esp|1 ação de conjuração|5 m|Cria tubo de ar invisível
+Vidente|7|Amolecimento Ósseo|—|1 ação de conjuração|Pessoal|Escapa de amarras; evita ataques em ponto vital
+Vidente|7|Transformar Papel em Armas|1 esp|1 ação de conjuração|Toque|Papel vira arma branca por 5 min
+Aprendiz|9|Abrir Porta|2 esp|1 ação de conjuração|Toque|Abre fechaduras ou cria porta em parede
+Aprendiz|9|Domínio Ritualístico|—|Passiva|—|Habilita magia ritualística
+Aprendiz|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +2 Intuição Espiritual
+Aprendiz|8|Congelamento|1 esp|1 ação de conjuração|Visão|1d6 frio; -2 próximo teste/movimento do alvo
+Aprendiz|8|Rajada de Vento|2 esp|1 ação de conjuração|10 m|Empurra 6 m; reduzido por tamanho do alvo
+Aprendiz|8|Queda|2 esp|1 ação de conjuração|Toque no chão|Alvo perde equilíbrio
+Aprendiz|8|Clarão|1 esp|1 ação de conjuração|10 m|Cega por 1 rodada quem olhar para você
+Aprendiz|8|Criar Névoa|2 esp|1 ação de conjuração|10 m|Névoa encobre área; -4 em testes à distância
+Aprendiz|8|Eletrochoque|2 esp|1 ação de conjuração|Visão|1d6 elétrico; ignora Agi/Esq; +1d6 vs morto-vivo
+Aprendiz|8|Combustão|2 esp|1 ação de conjuração|Visão|1d6 fogo + 1d3/rodada por 3 rodadas
+Aprendiz|8|Rebater|1 esp|1 ação de conjuração|Visão|Faz objeto em movimento retornar pelo caminho
+Aprendiz|8|Técnica de Truques|—|1 ação livre|Pessoal|1/rodada: executa truque como ação livre
+Aprendiz|7|Astrologia|2 esp|1 ação de conjuração|Variável|Adivinhação; esfera de cristal melhora resultado
+Aprendiz|7|Contra Adivinhação|—|Passiva|Própria|Interfere em adivinhações contra você
+Saqueador|9|Mãos Ágeis|—|1 ação livre|Pessoal|1/rodada: ação com Prestidigitação vira livre
+Saqueador|9|Observação Excepcional|—|Passiva|10 m|Sente itens valiosos num raio de 10 m
+Saqueador|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +2 Intuição Espiritual
+Saqueador|8|Carisma Pessoal|—|Passiva|Própria|+2 Carisma em testes sociais
+Saqueador|8|Eloquência Beyonder|2 esp|1 ação de conjuração|Audição|Palavras com força de persuasão; testa contra Def. Vontade
+Saqueador|8|Desvio Cognitivo|2 esp|1 ação de conjuração|Visão|Alvo acredita em equivalência falsa por 1 rodada
+Saqueador|8|Interferência Mental|3 esp|1 ação de conjuração|Visão|Ilusão vista apenas por 1 alvo
+Saqueador|8|Esquiva Rápida|—|Passiva|Pessoal|Def. Física completa contra armas de fogo; +1 esquiva
+Espectador|9|Estado de Espectador|—|Passiva|Própria|Lê pensamentos via detalhes; -4 em efeitos mentais
+Espectador|9|Condução Psicológica|—|Ações variadas|Variável|Influencia sutilmente decisões de alvo
+Espectador|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +2 Intuição Espiritual
+Espectador|8|Estado de Telepata|—|Passiva|Própria|Lê emoções superficiais; +4 Estado de Espectador
+Espectador|8|Observação de Emoções|—|Passiva|Visual|Percebe emoções imediatas dos outros
+Espectador|8|Simulação de Pensamento|—|1 ação de conjuração|Variável|Simula reação emocional de criatura conhecida
+Espectador|7|Intimidação (Presença Dracônica)|3 esp|1 ação de conjuração|10 m|Inimigos entram em pânico/caos por 1 rodada
+Espectador|7|Frenesi|3 esp|1 ação de conjuração|Visão|Detona emoção/loucura do alvo; 1/1d3 perda Sanidade
+Espectador|7|Sugestão Psicológica|1 esp|1 ação de conjuração|Visão|Implanta sugestão simples no alvo
+Espectador|7|Apaziguamento|2 esp|1 ação de conjuração|10 m|Remove 1 loucura/emoção; +1 Sanidade temporário
+Espectador|7|Leitura de Mentes|—|1 ação livre|Toque visual|Alvo em transe responde sinceramente
+Marinheiro|9|Respiração Subaquática|—|Passiva|Própria|Respira debaixo d'água (10 min, +15 por ascensão)
+Marinheiro|9|Equilíbrio|—|Passiva|Pessoal|Nunca perde equilíbrio
+Marinheiro|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +1 Intuição Espiritual
+Marinheiro|8|Fúria|1 esp|1 ação livre|Pessoal|Teste Vontade CD 20; +2 For/Con/Agi em fúria
+Marinheiro|8|Golpe de Fúria|—|1 ação de ataque|Corpo a corpo|+1d6 dano adicional em fúria
+Marinheiro|7|Compreensão Intuitiva|—|Passiva|Própria|Lê campos magnéticos, correntes, ventos
+Marinheiro|7|Favorecido do Mar|—|Passiva|Ambiente mar|+1 todos atributos; +2 em testes no mar
+Marinheiro|7|Purificação|1 esp|1 ação de conjuração|Toque|Limpa superfície tocada
+Marinheiro|7|Criar Grande Onda|3 esp|1 ação de conjuração|Variável|3d6 físico; +1d6 por ascensão
+Marinheiro|7|Controle da Água|2 esp|1 ação de conjuração|10 m|Cria/molda água de várias formas
+Marinheiro|7|Cura Aquática|3 esp|1 ação de conjuração|Toque|Trata ferimento leve; acelera recuperação
+Marinheiro|7|Membrana Abissal|2 esp|1 ação de conjuração|Toque|Cobre alvo; isola, permite mover na água
+Marinheiro|7|Chuva Corrosiva|3 esp|1 ação de conjuração|10 m|2d6 toxina em área; dobra vs plantas/teias
+Sol|9|Canto de Louvor à Coragem|2 esp|1 ação de conjuração|Audição|+1 For/Agi por 1 encontro; remove medo/veneno
+Sol|9|Canto de Louvor à Devoção|2 esp|1 ação de conjuração|Audição|1d2 Sanidade temp ou causa devoção nos inimigos
+Sol|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +1 Intuição Espiritual
+Sol|8|Visão Branco-Incandescente|1/min|1 ação rápida|Pessoal|Vê na escuridão total; revela ocultações sombrias
+Sol|8|Luz Radiante|2/rodada|1 ação de conjuração|10 m|Ilumina área; remove efeitos das Trevas/Corrupção/Mortos-vivos
+Sol|8|Invocar Luz Sagrada|3 esp|1 ação de conjuração|Visão|2d6 sagrado + 1d6 fogo
+Sol|8|Purificação|2 esp|1 ação de conjuração|10 m|Remove medo, maldição, escuridão, corrupção, toxinas
+Sol|7|Imunidade ao Medo|2 esp|1 ação rápida|Pessoal|Imune a medo por 1 encontro
+Sol|7|Chamas da Luz|2 esp|1 ação de conjuração|10 m|2d6 sagrado + 1d6 fogo em área contra Trevas
+Sol|7|Golpe de Purificação|1 esp|1 ação rápida|Toque|Próximo ataque vira supressão sagrada; +1d6 a +3d6
+Sol|7|Juramento Sagrado|—|1 ação rápida|Pessoal|+2 For/Agi ou +1d6 fogo/sagrado por 2 rodadas
+Sol|7|Aura Solar|2 esp|1 ação de conjuração|20 m|Purifica aliados; dano sagrado a inimigos das Trevas
+Sol|7|Produzir Água Sagrada|4 esp|1 ação de rodada completa|Toque|Cria 1 frasco de água sagrada solar
+Sol|7|Corpo de Luz Solar|—|Passiva|Pessoal|Resistência a maldição/frio/toxina
+Leitor|9|Palácio da Mente|—|1 ação livre|Pessoal|Biblioteca mental; recorda em 1 segundo
+Leitor|9|Compreensão Linguística|—|Passiva|Pessoal|Todas as línguas modernas = Proficiente
+Leitor|9|Leitura Rápida|—|Passiva|Pessoal|Livro de 1 semana em 1 hora
+Leitor|9|Conhecimento Beyonder|—|Passiva|Pessoal|Habilidades de conhecimento de outros caminhos
+Leitor|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +2 Intuição Espiritual
+Leitor|8|Dedução Básica|—|1 ação de conjuração|Visual|Reconstrói características a partir de detalhes
+Leitor|8|Projeção de Comportamento|—|1 ação de conjuração|Variável|Prevê ações de alvo por minutos/horas
+Leitor|8|Intuição Cognitiva|—|Passiva|Própria|Percebe inconsistências anteriores
+Leitor|7|Combate Técnico|—|Passiva|Pessoal|+1d6 dano; +2 em arremesso/tiro/explosivos
+Leitor|7|Reconstrução do Local|2 esp|1 ação de conjuração|100 m|Reconstrói eventos dos últimos 3 dias
+Leitor|7|Maestria Ritualística|—|Passiva|Pessoal|Obtém respostas de outras divindades ortodoxas
+Enforcado|9|Percepção da Impureza|—|Passiva|Variável|Percebe entidades misteriosas/aterrorizantes
+Enforcado|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +2 Intuição Espiritual
+Enforcado|9|Ritos de Sacrifício Oculto|—|Ritual 5 min|Variável|Sacrifício de Cordeiro etc.
+Enforcado|8|Percepção Auditiva|—|Passiva|Própria|Ouve sons Beyonder; perde Sanidade 1/1d2
+Enforcado|8|Loucura Latente|—|Passiva|Pessoal|Insanidade oculta (não afeta ações)
+Enforcado|8|Escuta|2 esp|1 ação rápida|Visual|Ouve murmúrios do Criador; efeitos aleatórios
+Enforcado|7|Visão na Escuridão|—|Passiva|Pessoal|Enxerga em escuridão total
+Enforcado|7|Ocultação nas Sombras|2 esp|1 ação de movimento|Pessoal|Vira sombra; +3 Agi; esquiva rápida
+Enforcado|7|Envolvimento Sombrio|—|1 ação de ataque/movimento|Variável|Agarra alvos pela sombra
+Enforcado|7|Ocultação Sombria|2 esp|1 ação rápida|Pessoal|Cobre aparência com sombras
+Enforcado|7|Manipulação de Sombras|2 esp|1 ação de conjuração|1 km|Molda sombras para atacar (1d6 a 3d6)
+Coletor de Cadaveres|9|Análise de Autópsia|—|1 ação de conjuração|Toque|Autopsia revela causa da morte e detalhes
+Coletor de Cadaveres|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +1 Intuição Espiritual
+Coletor de Cadaveres|9|Visão Espiritual de Almas|—|Passiva|Visual|Vê espíritos malignos sem ativar visão
+Coletor de Cadaveres|8|Olhos da Morte|5 esp|1 ação completa|Visão|Todos os ataques vs morto-vivo escolhido viram crítico
+Coletor de Cadaveres|7|Comunhão com os Mortos|3 esp|1 ação de conjuração|Visual|Fala diretamente com espíritos de mortos
+Coletor de Cadaveres|7|Comunicação com os Vivos|—|1 ação de conjuração|Visual|Mediunidade em pessoas vivas
+Coletor de Cadaveres|7|Mediunidade|3 esp|1 ação de conjuração|100 m|Obtém informações de espíritos da área
+Coletor de Cadaveres|7|Assistência Espiritual|3 esp|1 ação de conjuração|Pessoal|Espírito dá habilidade ou reproduz memória
+Coletor de Cadaveres|7|Domínio dos Mortos|3 esp|1 ação de conjuração|100 m|Comanda mortos-vivos e espíritos
+Noite Eterna|9|Favorecido pela Noite|—|Passiva|Pessoal|Bônus noturnos por período
+Noite Eterna|9|Visão no Escuro|—|Passiva|Pessoal|Enxerga em escuridão total
+Noite Eterna|9|Presentimento de Perigo|—|Passiva|Própria|Sentido de emboscadas e perigos ocultos
+Noite Eterna|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +1 Intuição Espiritual
+Noite Eterna|8|Poema da Indolência|3 esp|1 ação de conjuração|Audição|Alvos: máx 1 ação rápida, -2 desvantagem
+Noite Eterna|8|Poema da Meia-Noite|3 esp|1 ação de conjuração|Audição|Alvos em torpor por 1 rodada
+Noite Eterna|8|Poema do Requiem|3 esp|1 ação de conjuração|Audição|Alvos perdem 1 ação; remove medo/raiva
+Noite Eterna|8|Poema da Embriaguez|3 esp|1 ação de conjuração|Audição|Alvos veem ilusões; movem aleatoriamente
+Noite Eterna|8|Poema de Louvor|3 esp|1 ação de conjuração|Audição|Aliados +1 San; mortos-vivos sentem desconforto
+Noite Eterna|7|Arrastar à Força para o Sonho|3 esp|1 ação de conjuração|100 m|Até 10 alvos entram em sonho controlado
+Noite Eterna|7|Transformação em Pesadelo|—|1 ação de rodada completa|Cidade|Corpo dorme; forma espiritual no mundo dos sonhos
+Noite Eterna|7|Percepção de Sonhos|—|1 ação rápida|Visão|Vê massas de luz representando sonhos
+Guerreiro|9|Análise de Equipamento|—|Ação livre|Toque|Avalia qualidade de armas e armaduras
+Guerreiro|9|Domínio de Combate|—|Passiva|Pessoal|+2 em ações especiais
+Guerreiro|9|Técnica de Combate|—|Passiva|Pessoal|Fintas com Combate; armas de fogo curtas com Combate
+Guerreiro|9|Proficiência Universal em Armas|—|Passiva|Pessoal|Qualquer arma no mínimo Treinado
+Guerreiro|9|Esquiva Rápida|—|Passiva|Pessoal|Def. Física completa contra armas de fogo; +1 esquiva
+Guerreiro|9|Condição Física Beyonder|—|Passiva|Pessoal|+2 Vida; +10 cm altura por ascensão
+Guerreiro|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +1 Intuição Espiritual
+Guerreiro|8|Combate Beyonder|—|Passiva|Pessoal|+1d6 dano em qualquer arma
+Guerreiro|8|Resistência Física|—|Passiva|Pessoal|Reduz efeitos sobrenaturais no corpo
+Advogado|9|Conversação e Argumentação|—|Passiva|Própria|+2 Carisma em testes sociais
+Advogado|9|Distorção Induzida|—|Passiva|Audição|Distorce/guia pensamento em conversa de 3 min
+Advogado|9|Percepção de Brechas|—|1 ação de conjuração|Variável|Encontra fraquezas de regras/alvo
+Advogado|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +1 Intuição Espiritual
+Advogado|8|Lei da Selva|—|Passiva|Pessoal|+2 For; +1d6 dano corpo a corpo; Esquiva Rápida
+Advogado|8|Resistência Mental|—|Passiva|Pessoal|Reduz perda de Sanidade em 1 (mín 0)
+Advogado|7|Suborno|3 esp|1 ação de conjuração|Variável|Enfraquece ataque/defesa/controle ou encanta alvo
+Arbitro|9|Julgamentos Leves|—|1 ação de conjuração|Visão|Afaste-se/Devolva/Peça desculpas
+Arbitro|9|Julgamentos Médios|—|1 ação de conjuração|Visão|Entregue-se/Confesse/Arrependa-se
+Arbitro|9|Julgamentos Graves|—|1 ação de conjuração|Visão|Submeta-se à lei/Expie o crime
+Arbitro|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +1 Intuição Espiritual
+Arbitro|8|Percepção Beyonder|—|Passiva|50 m|Memoriza aparências; detecta mal/caos/loucura
+Arbitro|8|Jurisdição|—|Passiva|Área|Bônus em área conhecida; duplica alcance; +2 testes
+Arbitro|7|Domínio de Armas|—|Passiva|Pessoal|Armas = especialista; +2 em combate
+Arbitro|7|Perfuração Mental|—|1 ação rápida|Visão|Estado preparatório; causa medo; mantém alvo
+Cacador|9|Lei da Selva|—|Passiva|Variável|Usa Sobrevivência/Rastreamento/Audição/Investigação; +2 ações especiais
+Cacador|9|Confecção de Armadilhas|—|1 ação de rodada completa|Área|Cria armadilhas de ativação/alerta/captura/caça/explosiva
+Cacador|7|Bola de Fogo|2 esp|1 ação de conjuração|Visão|2d8 fogo; ignora 2 armadura
+Cacador|7|Lança de Chamas|4 esp|1 ação de ataque|Arremesso|2d8 + dado For fogo; ignora 2 resist
+Cacador|7|Chicote de Fogo|2 esp|1 ação de ataque|2 m|1d4 + ½ dado For; até 3 ataques (-4/-6)
+Cacador|7|Corvos de Fogo|2 esp|1 ação de conjuração|Visão|1d3/corvo; limite Intuição/2
+Cacador|7|Correntes de Fogo|1 esp|1 ação rápida|Toque|Reveste corpo/arma ou controla chamas
+Cacador|7|Propagação de Chamas|3 esp|1 ação de conjuração|10 m|Barreira ou espalhamento (2d6 fogo)
+Cacador|7|Compressão de Chamas|1 esp|1 ação rápida|Pessoal|Comprime fogo (+dano, +ignorar armadura)
+Cacador|7|Transformação em Lança Ardente|3 esp|1 ação de ataque|Arremesso|Vira lança de fogo; retorna à forma no impacto
+Assassino|9|Alteração Corporal|—|1 ação de conjuração|Pessoal|Corpo leve como pena por 1 rodada
+Assassino|9|Visão Aguçada|—|Passiva|Pessoal|Visão no escuro e visão de águia (1 km)
+Assassino|9|Ação de Assassinato|—|Passiva|Pessoal|+4 em furtividade nas sombras; +2 ações especiais
+Assassino|9|Esquiva Rápida|—|Passiva|Pessoal|Def. Física completa contra armas de fogo; +1 esquiva
+Assassino|9|Explosão Acumulada|2 esp|1 ação|Pessoal|Dobra dado de For ou atributo; -For por 2 rodadas
+Assassino|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +1 Intuição Espiritual
+Assassino|8|Encanto|—|1 ação de conjuração|Visual|Estado de encantamento; alvo obedece instruções
+Assassino|8|Desorientação Cognitiva|—|1 ação livre|Audição|Distorce conceitos; alvo acredita em argumento
+Assassino|8|Persuasão Intensificada|—|1 ação livre|Visão|Alvo age conforme crença atual
+Assassino|7|Maldição|3 esp|1 ação de conjuração|Variável|Nome ou sangue/carne do alvo; próximo ataque vira crítico
+Assassino|7|Ritual de Maldição|5 esp|1 dia|Cidade|Ritual grande; maldição em massa
+Assassino|7|Chamas Negras|2 esp|1 ação de conjuração|30 m|3d6 maldição; ignora 5 resist; queima espíritos
+Assassino|7|Controle do Gelo|2 esp|1 ação de conjuração|Visão|3d6 + dado For frio; -2 próximo teste do alvo
+Assassino|7|Substituição por Espelho|4 esp|1 ação de conjuração|10 m|Prepara espelho; substituto com 8 m
+Assassino|7|Substituição por Varinha|3 esp|5 min|10 m|Substituto por varinha; +1 Misticismo enquanto segura
+Assassino|7|Invisibilidade|1 esp|1 ação de conjuração|Pessoal|Fica invisível por 1 min
+Criminoso|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +1 Intuição Espiritual
+Criminoso|9|Percepção da Corrupção|—|Passiva|Visual|Vê coloração negra em corrompidos
+Criminoso|9|Êxtase na Queda|—|Passiva|Pessoal|Recupera Sanidade ao cometer crimes
+Criminoso|9|Arte da Matança|—|Passiva|Pessoal|+2 em ações especiais
+Criminoso|8|Corpo Não Humano|—|Passiva|Pessoal|Recuperação natural em 10 horas
+Criminoso|8|Perda da Humanidade|—|Passiva|Pessoal|Dificuldade em empatizar; age por desejo
+Criminoso|8|Asas Quebradas|3 esp|1 ação de conjuração|Visão|Reduz mobilidade/agilidade do alvo à metade
+Criminoso|8|Magias Demoníacas|1-2 esp|Variada|Variada|Escolhe magias tipo demoníaco
+Criminoso|7|Interferência do Submundo|—|Passiva|Pessoal|Contra-adivinhação ao matar criatura inteligente
+Criminoso|7|Sacrifício Ardente|—|Ritual|Variável|Oferendas a demônios; agradar/concessão/projeção
+Criminoso|7|Feitiçaria Primitiva|—|Ritual|Variável|Maldições primitivas; transfere efeitos negativos
+Prisioneiro|9|Loucura Latente|—|Passiva|Pessoal|+2 em ações especiais
+Prisioneiro|9|Contenção de Desejos|—|Passiva|Pessoal|Não sofre efeitos emocionais; age normalmente em loucura
+Prisioneiro|9|Ação Desenfreada|—|Passiva|Pessoal|Loucura se torna violenta; ataca inimigos
+Prisioneiro|9|Bênção do Firmamento|—|Passiva|Pessoal|Adivinhação contra você só alcança nível mínimo
+Prisioneiro|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +1 Intuição Espiritual
+Prisioneiro|8|Ação Instintiva Insana|2 esp|1 ação rápida|Pessoal|Rerrola teste; ou +1 atributo/dano em loucura
+Prisioneiro|8|Maldição da Lua Cheia|—|Passiva|Lua cheia|Teste Sanidade 1/1d3; falhas 18-20 viram críticas
+Prisioneiro|7|Transformação em Lobisomem|—|1 ação rápida|Pessoal|+2 For, +2 Con, +3 Agi; garras 1d6 maldição + 1d6 veneno
+Prisioneiro|7|Golpe de Lâminas|—|1 ação de ataque|Corpo a corpo|Garras ignoram armadura
+Prisioneiro|7|Cura Rápida|—|Passiva|Pessoal|1d6 Vida/rodada; não entra em estado crítico
+Prisioneiro|7|Esquiva Rápida|—|Passiva|Pessoal|Def. Física completa contra armas de fogo; +1 esquiva
+Prisioneiro|7|Armadura de Pelagem|—|Passiva|Pessoal|+3 Armadura; 5 resist frio (exceto vs fogo)
+Prisioneiro|7|Maldição Espiritual|—|Passiva|Pessoal|Adivinhação vê apenas silhueta coberta por pelos
+Prisioneiro|7|Transformação Parcial|—|1 ação rápida|Pessoal|Obtém 1 característica de lobisomem sem teste
+Prisioneiro|7|Alienação Mental|—|Passiva|Pessoal|-2 Vontade; +4 desvantagem em Sanidade
+Espreitador de Misterios|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +2 Intuição Espiritual
+Espreitador de Misterios|9|Vislumbre do Véu|—|Passiva|Pessoal|Percebe forças de Semideus+ nas proximidades
+Espreitador de Misterios|9|Domínio Ritual|—|Passiva|Pessoal|Rituais com Ocultismo Treinado = sucesso automático
+Espreitador de Misterios|9|Adivinhação|2 esp|1 ação de conjuração|Variável|Teste Ocultismo CD 15/20 para resultados vagos
+Espreitador de Misterios|8|Cântico de Alta Velocidade|—|1 ação livre|Pessoal|1/turno: executa ação de conjuração adicional
+Espreitador de Misterios|8|Aprimoramento de Conhecimento|1 esp|+1 ação de conjuração|Variável|Aumenta dano de magia
+Espreitador de Misterios|8|Bola de Fogo|2 esp|1 ação de conjuração|Visão|1d10 fogo; aprimorado: Int/2 bolas
+Espreitador de Misterios|8|Geada Explosiva|3 esp|1 ação de conjuração|Visão|1d10 frio; aprimorado: 3d6 em área 10 m
+Espreitador de Misterios|8|Arte do Trovão|3 esp|1 ação de conjuração|Visão|1d10 elétrico; ignora Agi/Esq
+Espreitador de Misterios|8|Feitiçaria de Materiais|2 esp|1 ação de conjuração|Variável|Usa materiais espirituais para feitiços
+Generalista|9|Despertar da Memória|3 esp|1 ação rápida|Pessoal|Próximo teste: perícia sobe 1 nível
+Generalista|9|Aprendizado Rápido|—|Passiva|Pessoal|Aprende perícias rapidamente
+Generalista|9|Aplicação Prática|—|1 ação de rodada completa|Pessoal|Fabrica itens a partir de materiais
+Generalista|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +1 Intuição Espiritual
+Generalista|8|Uso Ritual|—|Ritual|Variável|Usa magia ritualística
+Generalista|8|Conhecimento Tabu|—|Passiva|Pessoal|Interpreta histórias seladas pela Igreja
+Generalista|8|Inspeção de Mecanismos|—|Passiva|100 m|Detecta mecanismos/armadilhas/passagens ocultas
+Generalista|8|Aplicação do Conhecimento|—|Passiva|Pessoal|Bônus em Arqueologia/História/Sobrevivência
+Generalista|7|Avaliação Espiritual|—|1 ação rápida|Toque|Revela tipo e função de item Beyonder/material
+Generalista|7|Percepção Espiritual|—|Passiva|Visual|Vê se objeto tem espiritualidade; identifica Caminho
+Generalista|7|Aprimoramento de Item|—|1 ação de rodada completa|Toque|Aplica 1 melhoria a item
+Boticario|9|Preparação de Poções|—|1d3 horas|Pessoal|Prepara poções (Reputação×10 frascos)
+Boticario|9|Consumir Poções|—|1 ação de movimento|Pessoal|Bebe poção; vários tipos disponíveis
+Boticario|9|Identificação de Substâncias|—|5 min|Pessoal|Identifica toxinas, explosivos, medicamentos, fórmulas
+Boticario|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê deficiências corporais específicas
+Boticario|9|Afinidade Ecológica|—|Passiva|Variável|Encontra materiais em plantas/animais
+Boticario|8|Sentidos Animais|3 esp|1 ação de conjuração|20 m|Compartilha sentidos com animal; comanda por 5 min
+Boticario|7|Olfato Sobrenatural|—|1 ação livre|20 m|Identifica cheiros; detecta invisíveis; rastreia
+Boticario|7|Vida Sobrenatural|—|Passiva|Pessoal|300 anos de vida; visão no escuro; alimenta-se de sangue
+Boticario|7|Movimento em Alta Velocidade|1 esp|1 ação rápida|Pessoal|+1 Agi temporário
+Boticario|7|Regeneração Sobrenatural|—|Passiva|Pessoal|1d6 Vida/turno; coração perfurado reduz efeito
+Boticario|7|Magias da Lua|Variável|Variável|Variável|Servo de Sangue, Abraço, Asas Sombrias, Morcegos, Correntes, Garras
+Boticario|7|Magias das Trevas|Variável|Variável|Variável|Asas Sombrias, Criar Morcegos, Correntes do Abismo, Garras Corrosivas
+Plantador|9|Identificar Sementes|—|1 ação de conjuração|Visão|Conhece tipo, estado e cuidado necessário
+Plantador|9|Colheita|—|Passiva|Pessoal|Cultiva plantas comuns e Beyonder
+Plantador|9|Discernir o Clima|1 esp|1 ação de conjuração|Própria|Prevê clima por até 7 dias
+Plantador|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê deficiências; identifica causa
+Plantador|8|Tratamento de Males Graves|—|1 ação de conjuração|Toque|Costura membros; recupera Vida igual ao teste
+Plantador|8|Tratamento|3 esp|1 ação de conjuração|Toque|2d6 Vida; remove toxinas não agravadas
+Plantador|8|Costurar Almas|3 esp|1 ação de conjuração|Toque|Remove 1 sintoma de loucura/emoção/doença
+Plantador|7|Colheita|3 esp|1 ação de conjuração|10 m|Faz plantas crescerem desenfreadamente para lutar
+Plantador|7|Manipulação Vegetal|—|1 ação de conjuração|100 m|Manipula plantas de várias formas
+Monstro|9|Inspiração Elevada|—|Passiva|Própria|Ouve/ve coisas anormais; espreita, escuta, transe
+Monstro|9|Premonição de Perigo|—|Passiva|Própria|Teste Inspiração CD 20 evita perigos; +4 Def. Física
+Monstro|9|Visão Espiritual|1/rodada|1 ação livre|Visual|Vê corpos; +2 Intuição Espiritual
+Monstro|8|Adivinhação|3 esp|1 ação de conjuração|Variável|Teste Intuição; CD 15/20/25/30 dá resultados
+Monstro|8|Contra-Adivinhação|3 esp|1 ação de conjuração|Variável|Define dificuldade para adivinhações contra você
+Monstro|8|Cálculo|—|Passiva|Pessoal|Capacidade de cálculo assustadora
+Monstro|7|Sorte|—|Passiva|Pessoal|Redefine a cada 6h (1d3): Extrema/Favorável/Comum
+Monstro|7|Sorte Especial|—|Passiva|Pessoal|A cada 1d3h teste Sorte CD 25 para evento favorável`.trim().split("\n").map(function(l){return l.split("|")});
+var SKILLS=`Carisma|—|Agradar
+Carisma|—|Enganação
+Carisma|—|Retórica
+Carisma|—|Persuasão
+Carisma|—|Orientação Psicológica
+Carisma|Orient. Psic.|Hipnose
+Carisma|Orient. Psic.|Terapia Psicológica
+Carisma|—|Atuação
+Carisma|—|Disfarce
+Carisma|—|Reputação
+Força|—|Escalada
+Força|—|Arremesso
+Força|Luta|Corpo a Corpo
+Força|Luta|Armas Cortantes
+Força|Luta|Armas de Haste
+Força|Luta|Armas Gigantes
+Força|—|Intimidação
+Força|—|Salto
+Força|—|Domar Animais
+Agilidade|—|Furtividade
+Agilidade|—|Mãos Leves
+Agilidade|—|Natação
+Agilidade|Tiro|Pistolas
+Agilidade|Tiro|Rifles
+Agilidade|Tiro|Escopetas
+Agilidade|Tiro|Bestas
+Agilidade|Tiro|Arco e Flecha
+Agilidade|—|Artilharia
+Agilidade|—|Arrombamento/Chaveiro
+Agilidade|—|Esquiva
+Agilidade|—|Pilotagem/Condução
+Agilidade|—|Máquinas Pesadas
+Inspiração|—|Audição
+Inspiração|—|Investigação
+Inspiração|—|Reparos Mecânicos
+Inspiração|—|Ocultismo
+Inspiração|—|Psicologia
+Inspiração|—|Culinária
+Inspiração|Arte|Canto
+Inspiração|Arte|Teoria Musical
+Inspiração|Arte|Pintura/Desenho
+Inspiração|—|Manufatura Artesanal
+Inspiração|—|Rastreamento
+Inspiração|—|Leitura Labial
+Educação|—|Navegação
+Educação|—|Comércio
+Educação|—|Medicina
+Educação|—|Uso de Biblioteca
+Educação|—|Escrita
+Educação|—|Demolição
+Educação|—|Sobrevivência
+Educação|Conhecimento|Direito
+Educação|Conhecimento|Arqueologia
+Educação|Conhecimento|Religião
+Educação|Conhecimento|Química
+Educação|Conhecimento|Biologia
+Educação|Conhecimento|Farmácia
+Educação|Conhecimento|Sociologia
+Educação|Conhecimento|Astronomia
+Educação|Conhecimento|Botânica
+Educação|Conhecimento|Agricultura
+Educação|Conhecimento|História
+Educação|Conhecimento|Engenharia
+Educação|—|História Natural
+Educação|Línguas Ocultas|Língua Hermis
+Educação|Línguas Ocultas|Antiga Língua Hermis
+Educação|Línguas Ocultas|Antigo Fusac
+Educação|Línguas Ocultas|Língua dos Gigantes
+Educação|Línguas Ocultas|Língua dos Dragões
+Educação|Línguas Ocultas|Língua Élfica
+Educação|Línguas Comuns|Rueniano
+Educação|Línguas Comuns|Intisiano
+Educação|Línguas Comuns|Fusaciano
+Educação|Línguas Comuns|Dutanes
+Educação|Línguas Comuns|Highlandês/Alteia`.trim().split("\n").map(function(l){return l.split("|")});
+var ATTRS=[{k:"car",n:"Carisma"},{k:"for",n:"Força"},{k:"agi",n:"Agilidade"},{k:"con",n:"Constituição"},{k:"von",n:"Vontade"},{k:"insp",n:"Inspiração"},{k:"edu",n:"Educação"},{k:"sor",n:"Sorte"}];
+var LEVELS=["Não Treinado","Treinado","Proficiente","Avançado","Mestre","Erudito","Grão-Mestre"];
+var LEVEL_MOD={"Não Treinado":-4,"Treinado":2,"Proficiente":4,"Avançado":5,"Mestre":6,"Erudito":7,"Grão-Mestre":8};
+var DMG_TABLE=[[2,"1d2"],[3,"1d4"],[4,"1d4"],[5,"1d6"],[6,"1d6"],[7,"1d8"],[8,"1d10"],[9,"1d12"],[10,"2d6"],[11,"2d8"],[12,"2d10"],[13,"2d12"],[14,"3d8"],[15,"3d10"],[16,"3d12"],[20,"4d10"],[25,"4d12"],[30,"4d12"]];
+
+var ARMORS=[
+  {n:"Nenhuma",arm:0,red:0,dex:0,minStr:0,halfMove:0,notes:""},
+  {n:"Algodão/Couro",arm:2,red:2,dex:0,minStr:0,halfMove:0,notes:"Destruída após 2 danos de fogo"},
+  {n:"Cota de malha/Ferro",arm:4,red:3,dex:-2,minStr:0,halfMove:0,notes:"Destreza -2"},
+  {n:"Meia armadura",arm:6,red:4,dex:-4,minStr:4,halfMove:6,notes:"Des -4. For<6: movimento pela metade; For<4: não pode se mover. Não protege inferior vs Ponto Vital"},
+  {n:"Armadura completa",arm:8,red:5,dex:-4,minStr:5,halfMove:10,notes:"Des -4. For<10: movimento pela metade; For<5: não pode vestir"},
+  {n:"Completa encantada",arm:8,red:5,dex:-2,minStr:4,halfMove:8,notes:"Des -2. For<8: movimento pela metade; For<4: não pode se mover"}
+];
+
+var CLOTHES=[
+  {n:"Roupas Pobres",slots:2,min:2,max:2,hidden:0},
+  {n:"Roupas Comuns",slots:4,min:2,max:4,hidden:0},
+  {n:"Roupas Formais / Casaca",slots:8,min:4,max:8,hidden:2},
+  {n:"Manto de Feiticeiro",slots:12,min:8,max:12,hidden:4}
+];
+
+var BAGS=[
+  {n:"Nenhuma",slots:0,hidden:0,time:"—"},
+  {n:"Bolsa Transversal",slots:2,hidden:1,time:"1 ação de movimento"},
+  {n:"Mochila",slots:4,hidden:2,time:"1 rodada completa"},
+  {n:"Mala de Mão",slots:6,hidden:3,time:"1 rodada completa"},
+  {n:"Mala de Mão Grande",slots:8,hidden:4,time:"1 rodada completa (-2 em combate se arrastada)"}
+];
+
+var SIZES=[
+  {n:"Muito pequeno (3/espaço)",slots:0.34,locations:["Empunhado/Vestido","Bolso","Bolsa/Mochila/Mala"]},
+  {n:"Pequeno (2/espaço)",slots:0.5,locations:["Empunhado/Vestido","Bolso","Bolsa/Mochila/Mala"]},
+  {n:"Médio-pequeno",slots:1,locations:["Empunhado/Vestido","Bolso","Bolsa/Mochila/Mala"]},
+  {n:"Médio",slots:2,locations:["Empunhado/Vestido","Bolsa/Mochila/Mala"]},
+  {n:"Médio-grande",slots:3,locations:["Empunhado/Vestido","Mala de Mão","Mala de Mão Grande"]},
+  {n:"Grande",slots:4,locations:["Empunhado/Vestido","Mala de Mão Grande"]}
+];
+
+var SZ_MP="Médio-pequeno";
+var SZ_P="Pequeno (2/espaço)";
+var SZ_M="Médio";
+var SZ_MG="Médio-grande";
+var SZ_G="Grande";
+
+var CATALOG=[
+  {cat:"Armas Brancas", items:[
+    {n:"Punhos", s:"1d2 + For"},
+    {n:"Lâmina curta", s:"1d4 + For", sz:SZ_MP},
+    {n:"Lâmina curta (Golpe Duplo)", s:"1d4 + ½ For (↑); 2 ataques por ação; Luta Corpo a Corpo", sz:SZ_MP},
+    {n:"Espadas", s:"1d6 + For", sz:SZ_M},
+    {n:"Armas grandes", s:"1d8 + For; alcance 1 m sem contato direto", sz:SZ_M},
+    {n:"Chicote", s:"1d2 + ½ For (↑); alcance 1 m; até 3 ataques (-4 / -6)", sz:SZ_MP},
+    {n:"Bengala/Bastão (madeira)", s:"1d3 + For", sz:SZ_MP},
+    {n:"Bengala/Bastão (rígido/metal)", s:"1d4 + For", sz:SZ_MP},
+    {n:"Pedras/garrafas leves", s:"1d3 + For; outros: máx 1d6 a critério do Mestre", sz:SZ_P},
+    {n:"Arco curto", s:"1d3 + ½ For; atributo = Destreza; alcance = For", sz:SZ_M},
+    {n:"Arco longo", s:"1d6 + For; atributo = Força; alcance = 2× For", sz:SZ_MG},
+    {n:"Besta leve", s:"1d6; recarga = 1 ação rápida", sz:SZ_M},
+    {n:"Besta pesada", s:"2d6; recarga = 1 rodada completa", sz:SZ_M}
+  ]},
+  {cat:"Armas de Fogo — Pederneira", items:[
+    {n:"Pistola de pederneira", s:"1d4 bala; alcance 80 m; 1 bala; recarga = 1 rodada completa", sz:SZ_MP},
+    {n:"Rifle de pederneira", s:"1d8 bala; alcance 150 m; 1 bala; recarga = 1 rodada completa", sz:SZ_M}
+  ]},
+  {cat:"Armas de Fogo — Revólver", items:[
+    {n:"Revólver", s:"1d6 bala; alcance 30 m; 6 balas; recarga = 1 ação de ataque; 3 tiros (-2 cumulativo)", sz:SZ_MP},
+    {n:"Revólver especial", s:"1d6+2 bala; alcance 50 m; resto igual ao revólver comum", sz:SZ_MP}
+  ]},
+  {cat:"Armas de Fogo — Rifles", items:[
+    {n:"Rifle de ferrolho", s:"2d6 bala; alcance 160 m; 5 balas; 1 ação livre p/ manejar ferrolho a cada tiro", sz:SZ_M},
+    {n:"Rifle semiautomático", s:"2d6 bala; alcance 160 m; 3 tiros (-2 cumulativo); sem ferrolho", sz:SZ_M}
+  ]},
+  {cat:"Espingardas / Escopetas", items:[
+    {n:"Espingarda cano simples", s:"2d6 bala; alcance 50 m; 1 cartucho; atinge todos na área de dispersão", sz:SZ_M},
+    {n:"Espingarda cano duplo", s:"Base da cano simples; 2 cartuchos; dispara os dois de uma vez em 2 testes", sz:SZ_M},
+    {n:"Regra especial", s:"Se exceder Def. Física (sem Des/Esq), falha = metade do dano. Até 10 m: +½ dano, ignora 2 armadura. Até 5 m: dobra dano, ignora 3 armadura"}
+  ]},
+  {cat:"Explosivos", items:[
+    {n:"Granada de Fragmentação", s:"2d6 explosivo, ignora 2 armadura (↑ vira bônus); área 5 m; +1d6 dano físico", sz:SZ_P},
+    {n:"Granada Explosiva", s:"3d6 explosivo, ignora 3 armadura; área 5 m", sz:SZ_P},
+    {n:"Explosivos / Detonadores", s:"2d6 explosivo, ignora 3 armadura; área 5 m; posicionados", sz:SZ_P},
+    {n:"Coquetel Molotov", s:"1d6 fogo; área 5 m; +1d6/rodada por 2 rodadas; apagável com 1 ação de movimento", sz:SZ_P}
+  ]},
+  {cat:"Armas Pesadas", items:[
+    {n:"Rifle a Vapor", s:"3d6 bala; alcance 200 m; 5 balas; recarga = rodada completa", sz:SZ_MG},
+    {n:"Rifle de Precisão", s:"3d6+5 bala; alcance 800 m; 5 balas (manual) / 10 (carregador)", sz:SZ_MG},
+    {n:"Projétil de Artilharia", s:"4d6 explosivo; alcance 10.000 m; raio 10 m", sz:SZ_G},
+    {n:"Canhão de Defesa Costeira", s:"5d6 explosivo; alcance 20.000 m; raio 10 m", sz:SZ_G}
+  ]},
+  {cat:"Regras de Armas de Fogo", items:[
+    {n:"Bala vs Explosivo", s:"Ambos são dano físico; classificados separadamente por conveniência"},
+    {n:"Ignorar Des/Esq", s:"Armas de fogo e projéteis ignoram Destreza e Esquiva na Def. Física, exceto contra alvos com Esquiva Rápida"},
+    {n:"Licença de caça", s:"Espingardas exigem licença; normalmente requer Reputação qualificada"},
+    {n:"Rifle a Vapor", s:"Só pode ser portado por forças militares ou Igreja do Vapor; outros = posse ilegal"}
+  ]},
+  {cat:"Armaduras", items:[
+    {n:"Algodão / Couro", s:"+2 Arm; red 2 dano físico; destruída após 2 danos de fogo", sz:SZ_M, loc:"Empunhado/Vestido"},
+    {n:"Cota de malha / Ferro", s:"+4 Arm; red 3 físico e fogo; Destreza -2 temporário", sz:SZ_M, loc:"Empunhado/Vestido"},
+    {n:"Meia armadura", s:"+6 Arm; red 4 físico e fogo; Des -4 temp; For<6: metade mov; For<4: não move", sz:SZ_G, loc:"Empunhado/Vestido"},
+    {n:"Armadura completa", s:"+8 Arm; red 5 físico e fogo; Des -4 temp; For<10: metade mov; For<5: não veste", sz:SZ_G, loc:"Empunhado/Vestido"},
+    {n:"Completa encantada", s:"+8 Arm; red 5 dano externo; Des -2 temp; For<8: metade mov; For<4: não move", sz:SZ_G, loc:"Empunhado/Vestido"}
+  ]},
+  {cat:"Notas Finais", items:[
+    {n:"Acumulação", s:"Armadura externa só acumula com armadura de pele"},
+    {n:"Cavaleiros de Punição", s:"Usam armadura completa encantada em missões de longa distância ou guerra"}
+  ]}
+];
+
+var state=loadState();
+if(!state) state={name:"",player:"",path:"",seq:"",attrs:{car:0,for:0,agi:0,con:0,von:0,insp:0,edu:0,sor:0},skills:{},hp:0,san:0,esp:0};
+if(!state.equip) state.equip={clothes:"Roupas Comuns",clothesPockets:2,bag:"Nenhuma",bagHidden:0,armorIdx:0,items:[]};
+if(!state.equip.items) state.equip.items=[];
+if(typeof state.equip.armorIdx!=="number") state.equip.armorIdx=0;
+if(typeof state.equip.clothesPockets!=="number") state.equip.clothesPockets=2;
+if(typeof state.equip.bagHidden!=="number") state.equip.bagHidden=0;
+
+function saveState(){try{localStorage.setItem("lom_ficha_v3",JSON.stringify(state))}catch(e){}}
+function loadState(){try{return JSON.parse(localStorage.getItem("lom_ficha_v3"))}catch(e){return null}}
+
+function getSeqBonus(attr){
+  if(!state.path||!state.seq) return 0;
+  var seqN=parseInt(state.seq);
+  var idx=["for","agi","con","von","insp","car","edu","sor"].indexOf(attr);
+  var total=0;
+  for(var i=0;i<SEQ_DATA.length;i++){
+    var r=SEQ_DATA[i];
+    if(r[0]===state.path && parseInt(r[1])>=seqN) total+=parseInt(r[3+idx]||0);
+  }
+  return total;
+}
+function getSeqName(){
+  if(!state.path||!state.seq) return "";
+  for(var i=0;i<SEQ_DATA.length;i++){
+    var r=SEQ_DATA[i];
+    if(r[0]===state.path && r[1]===state.seq) return r[2];
+  }
+  return "";
+}
+function getTotal(attr){ return (parseInt(state.attrs[attr])||0)+getSeqBonus(attr); }
+
+function computeUsedSlots(){
+  var used=0;
+  for(var i=0;i<state.equip.items.length;i++){
+    var it=state.equip.items[i];
+    var sz=null;
+    for(var j=0;j<SIZES.length;j++){ if(SIZES[j].n===it.size){ sz=SIZES[j]; break; } }
+    if(!sz) sz=SIZES[2];
+    var qty=parseInt(it.qty)||1;
+    used+=sz.slots*qty;
+  }
+  return Math.round(used*100)/100;
+}
+
+function getLoadPenalty(){
+  var forc=getTotal("for");
+  var theory=forc*2;
+  var used=computeUsedSlots();
+  if(used>theory) return Math.ceil(used-theory);
+  return 0;
+}
+
+function getArmorEffective(){
+  var a=ARMORS[state.equip.armorIdx]||ARMORS[0];
+  var forc=getEffective("for");
+  if(a.minStr>0 && forc<a.minStr){
+    return {armor:a, disabled:true, halfMove:false};
+  }
+  var halfMove=(a.halfMove>0 && forc<a.halfMove);
+  return {armor:a, disabled:false, halfMove:halfMove};
+}
+
+function getEffective(attr){
+  var t=getTotal(attr);
+  if(attr==="for"||attr==="agi") t-=getLoadPenalty();
+  return t;
+}
+
+function dmgDie(f){var d="—";for(var i=0;i<DMG_TABLE.length;i++){if(f>=DMG_TABLE[i][0])d=DMG_TABLE[i][1];}return d;}
+function beyLevel(){return state.seq?10-parseInt(state.seq):0;}
+
+document.querySelectorAll("nav button").forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll("nav button").forEach(function(x){x.classList.remove("active")});
+    document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("active")});
+    b.classList.add("active");
+    document.getElementById("tab-"+b.dataset.tab).classList.add("active");
+  };
+});
+
+document.getElementById("pName").value=state.name||"";
+document.getElementById("pPlayer").value=state.player||"";
+var pathSel=document.getElementById("pPath");
+pathSel.innerHTML='<option value="">Caminho…</option>'+PATHS.map(function(p){return "<option>"+p+"</option>"}).join("");
+pathSel.value=state.path||"";
+var seqSel=document.getElementById("pSeq");
+seqSel.value=state.seq||"";
+
+pathSel.onchange=function(){state.path=pathSel.value;renderAll();saveState();};
+seqSel.onchange=function(){state.seq=seqSel.value;renderAll();saveState();};
+document.getElementById("pName").oninput=function(e){state.name=e.target.value;updateHeader();saveState();};
+document.getElementById("pPlayer").oninput=function(e){state.player=e.target.value;saveState();};
+
+function updateHeader(){
+  document.getElementById("hdrTitle").textContent=state.name||"—";
+  document.getElementById("hdrSub").textContent=(state.path||"—")+" · "+(state.seq?"Seq "+state.seq:"—");
+}
+
+function renderAll(){renderAttrs();renderResources();renderDefenses();renderSkills();renderAbilities();renderEquip();updateHeader();}
+
+function renderAttrs(){
+  var box=document.getElementById("attrs");
+  var pen=getLoadPenalty();
+  box.innerHTML=ATTRS.map(function(a){
+    var base=parseInt(state.attrs[a.k])||0;
+    var bonus=getSeqBonus(a.k);
+    var penThis=(a.k==="for"||a.k==="agi")?pen:0;
+    var tot=base+bonus-penThis;
+    var totStr=tot+(penThis?" *":"");
+    return '<div class="attr">'+
+      '<div class="nm">'+a.n+'</div>'+
+      '<input type="number" inputmode="numeric" data-k="'+a.k+'" value="'+(state.attrs[a.k]||0)+'">'+
+      '<div class="tot" style="opacity:.7">'+(bonus>0?"+"+bonus:bonus<0?bonus:"—")+'</div>'+
+      '<div class="tot" data-total="'+a.k+'">'+totStr+'</div>'+
+    '</div>';
+  }).join("");
+  box.querySelectorAll("input").forEach(function(inp){
+    inp.oninput=function(e){
+      state.attrs[e.target.dataset.k]=parseInt(e.target.value)||0;
+      // Atualiza só a coluna Total — sem reconstruir os inputs
+      updateAttrTotals();
+      renderResources();
+      renderDefenses();
+      renderEquip();
+      saveState();
+    };
+  });
+  var hint=document.getElementById("loadPenaltyHint");
+  if(pen>0) hint.innerHTML='<span style="color:var(--red)">⚠️ Sobrecarga: -'+pen+' em Força e Agilidade (marcados com *)</span>';
+  else hint.textContent="";
+}
+
+function updateAttrTotals(){
+  var pen=getLoadPenalty();
+  for(var i=0;i<ATTRS.length;i++){
+    var a=ATTRS[i];
+    var base=parseInt(state.attrs[a.k])||0;
+    var bonus=getSeqBonus(a.k);
+    var penThis=(a.k==="for"||a.k==="agi")?pen:0;
+    var tot=base+bonus-penThis;
+    var totStr=tot+(penThis?" *":"");
+    var cell=document.querySelector('[data-total="'+a.k+'"]');
+    if(cell) cell.textContent=totStr;
+  }
+}
+
+function renderResources(){
+  var con=getTotal("con"),von=getTotal("von"),insp=getTotal("insp");
+  var vonBase=parseInt(state.attrs.von)||0;
+  var inspBase=parseInt(state.attrs.insp)||0;
+  var hpMax=10+con+(state.seq?(10-parseInt(state.seq))*con:0);
+  var sanMax=10+von;
+  var espMax=(vonBase+inspBase)+beyLevel()*insp;
+  document.getElementById("resources").innerHTML=
+    '<div class="row"><span class="lbl">❤️ Vida (PV)</span><span class="val">'+((typeof state.hp==="number")?state.hp:hpMax)+' / '+hpMax+'</span></div>'+
+    '<div class="bar hp"><div style="width:'+Math.min(100,(((typeof state.hp==="number")?state.hp:hpMax)/hpMax)*100)+'%"></div></div>'+
+    '<div class="quick" style="margin-bottom:12px"><button onclick="hpChange(1)">+1</button><button onclick="hpChange(-1)">-1</button><button onclick="hpChange(-5)">-5</button><button onclick="setHp()">=Máx</button></div>'+
+    '<div class="row"><span class="lbl">🧠 Sanidade</span><span class="val">'+((typeof state.san==="number")?state.san:sanMax)+' / '+sanMax+'</span></div>'+
+    '<div class="bar san"><div style="width:'+Math.min(100,(((typeof state.san==="number")?state.san:sanMax)/sanMax)*100)+'%"></div></div>'+
+    '<div class="quick" style="margin-bottom:12px"><button onclick="sanChange(1)">+1</button><button onclick="sanChange(-1)">-1</button><button onclick="sanChange(-2)">-2</button><button onclick="setSan()">=Máx</button></div>'+
+    '<div class="row"><span class="lbl">✨ Espiritualidade</span><span class="val">'+((typeof state.esp==="number")?state.esp:espMax)+' / '+espMax+'</span></div>'+
+    '<div class="bar esp"><div style="width:'+Math.min(100,(((typeof state.esp==="number")?state.esp:espMax)/espMax)*100)+'%"></div></div>'+
+    '<div class="quick"><button onclick="espChange(1)">+1</button><button onclick="espChange(-1)">-1</button><button onclick="espChange(-3)">-3</button><button onclick="setEsp()">=Máx</button></div>';
+  window._hpMax=hpMax;window._sanMax=sanMax;window._espMax=espMax;
+}
+function hpChange(d){var cur=(typeof state.hp==="number")?state.hp:window._hpMax;state.hp=Math.max(0,Math.min(window._hpMax,cur+d));renderResources();saveState();}
+function sanChange(d){var cur=(typeof state.san==="number")?state.san:window._sanMax;state.san=Math.max(0,Math.min(window._sanMax,cur+d));renderResources();saveState();}
+function espChange(d){var cur=(typeof state.esp==="number")?state.esp:window._espMax;state.esp=Math.max(0,Math.min(window._espMax,cur+d));renderResources();saveState();}
+function setHp(){state.hp=window._hpMax;renderResources();saveState();}
+function setSan(){state.san=window._sanMax;renderResources();saveState();}
+function setEsp(){state.esp=window._espMax;renderResources();saveState();}
+
+function renderDefenses(){
+  var agi=getEffective("agi"),con=getTotal("con"),von=getTotal("von"),forc=getEffective("for");
+  var eff=getArmorEffective();
+  var armor=eff.armor;
+  var armorArm=eff.disabled?0:armor.arm;
+  var armorRed=eff.disabled?0:armor.red;
+  var armorDex=eff.disabled?0:armor.dex;
+  var skillEsq=state.skills["Esquiva"]?LEVEL_MOD[state.skills["Esquiva"]]:2;
+  var agiFinal=agi+armorDex;
+  var defFis=10+agiFinal+skillEsq+armorArm;
+  var defFisFire=10+armorArm;
+  var mov=forc+agi;
+  var movStr=mov+" m";
+  if(eff.halfMove){
+    mov=Math.ceil(mov/2);
+    movStr=mov+" m (metade)";
+  }
+  var html=
+    '<div class="row"><span class="lbl">Defesa Física</span><span class="val">'+defFis+'</span></div>'+
+    '<div class="row"><span class="lbl">Defesa Física (armas de fogo)</span><span class="val">'+defFisFire+'</span></div>'+
+    '<div class="row"><span class="lbl">Defesa de Vontade</span><span class="val">'+(10+von)+'</span></div>'+
+    '<div class="row"><span class="lbl">Defesa de Constituição</span><span class="val">'+(10+con)+'</span></div>'+
+    '<div class="row"><span class="lbl">Movimento (m)</span><span class="val">'+movStr+'</span></div>';
+  if(!eff.disabled && armorRed>0){
+    html+='<div class="row"><span class="lbl">Redução de dano (fís/fogo)</span><span class="val">-'+armorRed+'</span></div>';
+  }
+  if(eff.disabled){
+    html+='<div class="alert warn" style="margin-top:8px">⚠️ Armadura desativada: Força insuficiente (precisa '+armor.minStr+', tem '+forc+')</div>';
+  } else if(eff.halfMove){
+    html+='<div class="alert warn" style="margin-top:8px">⚠️ Movimento reduzido à metade (precisa de Força '+armor.halfMove+')</div>';
+  }
+  document.getElementById("defenses").innerHTML=html;
+  document.getElementById("dmgDie").textContent=dmgDie(forc);
+  document.getElementById("slots").textContent=getTotal("for")*2;
+  document.getElementById("beyLvl").textContent=beyLevel()||"—";
+}
+
+var currentSkillAttr="Carisma";
+function renderSkillTabs(){
+  var attrs=["Carisma","Força","Agilidade","Inspiração","Educação"];
+  document.getElementById("skillTabs").innerHTML=attrs.map(function(a){
+    return '<button class="'+(a===currentSkillAttr?'active':'')+'" onclick="setSkillTab(\''+a+'\')">'+a+'</button>';
+  }).join("");
+}
+function setSkillTab(a){currentSkillAttr=a;renderSkillTabs();renderSkills();}
+function renderSkills(){
+  var filtered=SKILLS.filter(function(s){return s[0]===currentSkillAttr});
+  var box=document.getElementById("skills");
+  if(!filtered.length){box.innerHTML='<div class="empty">Sem perícias</div>';return;}
+  box.innerHTML=filtered.map(function(s){
+    var key=s[2];
+    var lvl=state.skills[key]||(key==="Esquiva"?"Treinado":"Não Treinado");
+    var attrKey={"Carisma":"car","Força":"for","Agilidade":"agi","Inspiração":"insp","Educação":"edu"}[s[0]];
+    var attrVal=getEffective(attrKey);
+    var mod=LEVEL_MOD[lvl];
+    var total=attrVal+mod;
+    return '<div class="card" style="padding:10px;margin-bottom:6px"><div class="skill"><div class="top"><div class="nm">'+s[2]+'</div><div class="bonus">'+(total>=0?"+":"")+total+'</div></div><select onchange="setSkill(\''+key+'\', this.value)">'+LEVELS.map(function(l){return '<option '+(l===lvl?"selected":"")+'>'+l+'</option>'}).join("")+'</select></div></div>';
+  }).join("");
+}
+function setSkill(key,val){state.skills[key]=val;renderSkills();renderDefenses();saveState();}
+
+document.getElementById("abSearch").oninput=renderAbilities;
+function renderAbilities(){
+  var info=document.getElementById("abInfo");
+  var box=document.getElementById("abilities");
+  if(!state.path||!state.seq){info.textContent="Escolha caminho e sequência na Ficha";box.innerHTML="";return;}
+  var seqN=parseInt(state.seq);
+  var search=(document.getElementById("abSearch").value||"").toLowerCase();
+  var list=ABILITIES.filter(function(a){return a[0]===state.path&&parseInt(a[1])>=seqN});
+  if(search) list=list.filter(function(a){return a[2].toLowerCase().indexOf(search)>=0||(a[6]||"").toLowerCase().indexOf(search)>=0});
+  list.sort(function(a,b){return parseInt(a[1])-parseInt(b[1])});
+  info.textContent=state.path+" · Seq "+state.seq+" ("+getSeqName()+") — "+list.length+" habilidade(s)";
+  if(!list.length){box.innerHTML='<div class="empty">Nada encontrado</div>';return;}
+  box.innerHTML=list.map(function(a){
+    return '<div class="ability" onclick="this.classList.toggle(\'open\')"><div class="head"><div class="nm">'+a[2]+'</div><div class="seq">Seq '+a[1]+'</div></div><div class="meta"><span>✨ '+a[3]+'</span><span>⚡ '+a[4]+'</span><span>📍 '+a[5]+'</span></div><div class="desc">'+a[6]+'</div></div>';
+  }).join("");
+}
+
+function updateCapDisplay(){
+  var cInfo=null;
+  for(var i=0;i<CLOTHES.length;i++){ if(CLOTHES[i].n===state.equip.clothes){ cInfo=CLOTHES[i]; break; } }
+  if(!cInfo) cInfo=CLOTHES[1];
+  var bInfo=null;
+  for(var i=0;i<BAGS.length;i++){ if(BAGS[i].n===state.equip.bag){ bInfo=BAGS[i]; break; } }
+  if(!bInfo) bInfo=BAGS[0];
+
+  var forTotal=getTotal("for");
+  var theory=forTotal*2;
+  var used=computeUsedSlots();
+  var realSlots=cInfo.slots+bInfo.slots;
+  document.getElementById("capTheory").textContent=theory;
+  document.getElementById("capUsed").textContent=used;
+  document.getElementById("capReal").textContent=realSlots;
+  var pct=Math.min(100,(used/Math.max(1,theory))*100);
+  var bar=document.getElementById("capBar");
+  bar.className="bar"+(used>theory?" warn":"");
+  bar.querySelector("div").style.width=pct+"%";
+
+  var msg=document.getElementById("capMsg");
+  var pen=getLoadPenalty();
+  if(pen>0){
+    msg.innerHTML='<div class="alert warn">⚠️ Sobrecarregado em '+pen+' espaço(s): -'+pen+' em Força e Agilidade</div>';
+  } else if(used>realSlots){
+    msg.innerHTML='<div class="alert warn">⚠️ Itens demais para os bolsos disponíveis (real: '+realSlots+'). Adicione bolsas ou modifique a roupa.</div>';
+  } else {
+    msg.innerHTML='<div class="alert ok">✓ Carga OK</div>';
+  }
+}
+
+function renderEquip(){
+  var cSel=document.getElementById("clothesSel");
+  cSel.innerHTML=CLOTHES.map(function(c){return '<option '+(c.n===state.equip.clothes?"selected":"")+'>'+c.n+'</option>'}).join("");
+  cSel.onchange=function(e){state.equip.clothes=e.target.value;renderEquip();saveState();};
+
+  var cInfo=null;
+  for(var i=0;i<CLOTHES.length;i++){ if(CLOTHES[i].n===state.equip.clothes){ cInfo=CLOTHES[i]; break; } }
+  if(!cInfo) cInfo=CLOTHES[1];
+
+  var cPack=document.getElementById("clothesPockets");
+  cPack.value=state.equip.clothesPockets;
+  cPack.oninput=function(e){state.equip.clothesPockets=parseInt(e.target.value)||0;saveState();};
+
+  var bSel=document.getElementById("bagSel");
+  bSel.innerHTML=BAGS.map(function(b){return '<option '+(b.n===state.equip.bag?"selected":"")+'>'+b.n+'</option>'}).join("");
+  bSel.onchange=function(e){state.equip.bag=e.target.value;renderEquip();saveState();};
+
+  var bInfo=null;
+  for(var i=0;i<BAGS.length;i++){ if(BAGS[i].n===state.equip.bag){ bInfo=BAGS[i]; break; } }
+  if(!bInfo) bInfo=BAGS[0];
+
+  var bH=document.getElementById("bagHidden");
+  bH.value=state.equip.bagHidden||0;
+  bH.oninput=function(e){state.equip.bagHidden=parseInt(e.target.value)||0;saveState();};
+
+  document.getElementById("clothesInfo").innerHTML=
+    'Roupa: espaços '+cInfo.slots+' · bolsos '+cInfo.min+'–'+cInfo.max+' · ocultos '+cInfo.hidden+
+    '<br>Bolsa: '+bInfo.n+' — espaços +'+bInfo.slots+' · ocultos '+bInfo.hidden+' · pegar: '+bInfo.time;
+
+  var aSel=document.getElementById("armorSel");
+  aSel.innerHTML=ARMORS.map(function(a,i){return '<option value="'+i+'" '+(i===state.equip.armorIdx?"selected":"")+'>'+a.n+'</option>'}).join("");
+  aSel.onchange=function(e){state.equip.armorIdx=parseInt(e.target.value);renderAll();saveState();};
+
+  var eff=getArmorEffective();
+  var armor=eff.armor;
+  var forc=getEffective("for");
+  var infoHtml="";
+  if(eff.disabled){
+    infoHtml+='<div class="alert warn">⚠️ <b>Não pode vestir</b>: requer Força '+armor.minStr+'. Sua Força é '+forc+'.</div>';
+  } else {
+    infoHtml+='<div class="row"><span class="lbl">Armadura (Def. Física)</span><span class="val">+'+armor.arm+'</span></div>';
+    infoHtml+='<div class="row"><span class="lbl">Redução de dano</span><span class="val">-'+armor.red+'</span></div>';
+    infoHtml+='<div class="row"><span class="lbl">Penalidade Destreza</span><span class="val">'+armor.dex+'</span></div>';
+  }
+  if(armor.minStr>0){
+    infoHtml+='<div class="hint">Requer Força '+armor.minStr+' (atual: '+forc+')</div>';
+  }
+  if(armor.halfMove>0){
+    infoHtml+='<div class="hint">Movimento pela metade se Força &lt; '+armor.halfMove+'</div>';
+  }
+  if(armor.notes){
+    infoHtml+='<div class="hint" style="margin-top:6px">'+armor.notes+'</div>';
+  }
+  document.getElementById("armorInfo").innerHTML=infoHtml;
+
+  var forTotal=getTotal("for");
+  var theory=forTotal*2;
+  var used=computeUsedSlots();
+  var realSlots=cInfo.slots+bInfo.slots;
+  document.getElementById("capTheory").textContent=theory;
+  document.getElementById("capUsed").textContent=used;
+  document.getElementById("capReal").textContent=realSlots;
+  var pct=Math.min(100,(used/Math.max(1,theory))*100);
+  var bar=document.getElementById("capBar");
+  bar.className="bar"+(used>theory?" warn":"");
+  bar.querySelector("div").style.width=pct+"%";
+
+  var msg=document.getElementById("capMsg");
+  var pen=getLoadPenalty();
+  if(pen>0){
+    msg.innerHTML='<div class="alert warn">⚠️ Sobrecarregado em '+pen+' espaço(s): -'+pen+' em Força e Agilidade</div>';
+  } else if(used>realSlots){
+    msg.innerHTML='<div class="alert warn">⚠️ Itens demais para os bolsos disponíveis (real: '+realSlots+'). Adicione bolsas ou modifique a roupa.</div>';
+  } else {
+    msg.innerHTML='<div class="alert ok">✓ Carga OK</div>';
+  }
+
+function renderCatalog(){
+  var box=document.getElementById("catalog");
+  if(!box) return;
+  var q=(document.getElementById("catSearch").value||"").toLowerCase();
+  var html="";
+  for(var i=0;i<CATALOG.length;i++){
+    var cat=CATALOG[i];
+    var filtered=[];
+    for(var j=0;j<cat.items.length;j++){
+      var it=cat.items[j];
+      if(!q || (it.n+" "+it.s).toLowerCase().indexOf(q)>=0){
+        filtered.push(it);
+      }
+    }
+    if(!filtered.length) continue;
+    html+='<div class="catalog-cat">'+cat.cat+'</div>';
+    for(var k=0;k<filtered.length;k++){
+      var item=filtered[k];
+      var safeName=item.n.replace(/'/g,"\\'").replace(/"/g,"&quot;");
+      var safeSize=(item.sz||"").replace(/'/g,"\\'");
+      var safeLoc=(item.loc||"").replace(/'/g,"\\'");
+      var btn="";
+      if(item.sz){
+        btn='<button class="cat-add" onclick="addFromCatalog(\''+safeName+'\',\''+safeSize+'\',\''+safeLoc+'\')">+</button>';
+      }
+      html+='<div class="catalog-item'+(item.sz?' with-btn':'')+'">'+
+        '<div class="cat-text"><div class="n">'+item.n+'</div><div class="s">'+item.s+'</div></div>'+
+        btn+
+      '</div>';
+    }
+  }
+  box.innerHTML=html||'<div class="empty">Nada encontrado</div>';
+}
+document.getElementById("catSearch").oninput=renderCatalog;
+
+  renderItems();
+}
+
+function renderItems(){
+  var box=document.getElementById("itemsList");
+  if(!state.equip.items.length){
+    box.innerHTML='<div class="empty">Nenhum item ainda</div>';
+    return;
+  }
+  var html="";
+  for(var i=0;i<state.equip.items.length;i++){
+    var it=state.equip.items[i];
+    var sz=null;
+    for(var j=0;j<SIZES.length;j++){ if(SIZES[j].n===it.size){ sz=SIZES[j]; break; } }
+    if(!sz) sz=SIZES[2];
+    var sizeOpts="";
+    for(var k=0;k<SIZES.length;k++){
+      sizeOpts+='<option '+(SIZES[k].n===it.size?"selected":"")+'>'+SIZES[k].n+'</option>';
+    }
+    var locOpts="";
+    for(var k=0;k<sz.locations.length;k++){
+      locOpts+='<option '+(sz.locations[k]===it.location?"selected":"")+'>'+sz.locations[k]+'</option>';
+    }
+    var nm=(it.name||"").replace(/"/g,"&quot;");
+    html+='<div class="item-row" data-idx="'+i+'">'+
+      '<div class="item-head">'+
+        '<input class="item-name" placeholder="Nome" value="'+nm+'" style="flex:1">'+
+        '<button class="del" data-idx="'+i+'">×</button>'+
+      '</div>'+
+      '<div class="item-grid">'+
+        '<select class="item-size">'+sizeOpts+'</select>'+
+        '<input class="item-qty" type="number" inputmode="numeric" value="'+(it.qty||1)+'" placeholder="Qtd">'+
+      '</div>'+
+      '<select class="item-loc" style="margin-top:6px">'+locOpts+'</select>'+
+    '</div>';
+  }
+  box.innerHTML=html;
+  var rows=box.querySelectorAll(".item-row");
+  for(var i=0;i<rows.length;i++){
+    (function(row){
+      var idx=parseInt(row.getAttribute("data-idx"));
+      row.querySelector(".item-name").oninput=function(e){state.equip.items[idx].name=e.target.value;saveState();};
+      row.querySelector(".item-qty").oninput=function(e){state.equip.items[idx].qty=parseInt(e.target.value)||1;updateCapDisplay();renderAttrs();renderDefenses();saveState();};
+row.querySelector(".item-qty").onblur=function(e){e.target.value=state.equip.items[idx].qty;};
+      row.querySelector(".item-size").onchange=function(e){
+        state.equip.items[idx].size=e.target.value;
+        var newSz=null;
+        for(var j=0;j<SIZES.length;j++){ if(SIZES[j].n===e.target.value){ newSz=SIZES[j]; break; } }
+        if(newSz && newSz.locations.indexOf(state.equip.items[idx].location)<0){
+          state.equip.items[idx].location=newSz.locations[0];
+        }
+        renderEquip();renderAttrs();renderDefenses();saveState();
+      };
+      row.querySelector(".item-loc").onchange=function(e){state.equip.items[idx].location=e.target.value;saveState();};
+      row.querySelector(".del").onclick=function(){
+        state.equip.items.splice(idx,1);
+        renderEquip();renderAttrs();renderDefenses();saveState();
+      };
+    })(rows[i]);
+  }
+}
+
+document.getElementById("addItemBtn").onclick=function(){
+  state.equip.items.push({name:"",size:SIZES[2].n,qty:1,location:SIZES[2].locations[0]});
+  renderEquip();saveState();
+};
+
+function exportJSON(){
+  var blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");
+  a.href=url;a.download=(state.name||"ficha")+".json";a.click();URL.revokeObjectURL(url);
+}
+function importJSON(e){
+  var f=e.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(ev){
+    try{
+      state=JSON.parse(ev.target.result);
+      if(!state.equip) state.equip={clothes:"Roupas Comuns",clothesPockets:2,bag:"Nenhuma",bagHidden:0,armorIdx:0,items:[]};
+      if(!state.equip.items) state.equip.items=[];
+      saveState();location.reload();
+    }catch(err){alert("Arquivo inválido");}
+  };
+  r.readAsText(f);
+}
+function resetAll(){
+  if(!confirm("Zerar a ficha inteira?"))return;
+  try{localStorage.removeItem("lom_ficha_v3");}catch(e){}
+  location.reload();
+}
+
+renderSkillTabs();
+renderAll();
+renderCatalog();
+
+function addFromCatalog(name, size, loc){
+  var location=loc || "Empunhado/Vestido";
+  state.equip.items.push({
+    name:name,
+    size:size,
+    qty:1,
+    location:location
+  });
+  saveState();
+  renderEquip();
+  showToast("✓ "+name+" adicionado");
+}
+
+function showToast(msg){
+  var t=document.createElement("div");
+  t.className="alert ok";
+  t.style.position="fixed";
+  t.style.bottom="80px";
+  t.style.left="16px";
+  t.style.right="16px";
+  t.style.zIndex="100";
+  t.style.textAlign="center";
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.remove(); },2000);
+}
+
+</script>
+</body>
+</html>
