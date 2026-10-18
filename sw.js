@@ -1,4 +1,4 @@
-const CACHE = 'lom-ficha-v2'; // Nome exclusivo para não conflitar com a outra ficha
+const CACHE = 'lom-ficha-v2.1'; // Nome exclusivo para não conflitar com a outra ficha
 const ESSENCIAIS = [
   './',
   './index.html',
