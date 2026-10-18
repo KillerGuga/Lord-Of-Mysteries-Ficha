@@ -1,4 +1,4 @@
-const CACHE = 'lom-ficha-v2.2'; // <-- Mude esta versão sempre que alterar o código
+const CACHE = 'lom-ficha-v2.3'; // <-- Mude esta versão sempre que alterar o código
 const PREFIXO = 'lom-ficha-';   // Este app só mexe nos próprios caches (a outra ficha usa outro prefixo)
 const ESSENCIAIS = [
   './',
