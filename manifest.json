@@ -1,8 +1,9 @@
 {
-  "id": "/Ficha-Lord-Of-Mysteries/",
+  "id": "/Lord-Of-Mysteries-Ficha/",
   "name": "Ficha Lord of Mysteries",
   "short_name": "Ficha LoM",
-  "start_url": "/Ficha-Lord-Of-Mysteries/index.html",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0f0f1e",
