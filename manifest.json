@@ -2,8 +2,8 @@
   "id": "/Lord-Of-Mysteries-Ficha/",
   "name": "Ficha Lord of Mysteries",
   "short_name": "Ficha LoM",
-  "start_url": "/Ficha-Lord-of-Mysteries/index.html?app=lom",
-  "scope": "./",
+  "start_url": "/Lord-Of-Mysteries-Ficha/index.html",
+  "scope": "/Lord-Of-Mysteries-Ficha/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0f0f1e",
@@ -12,12 +12,14 @@
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
