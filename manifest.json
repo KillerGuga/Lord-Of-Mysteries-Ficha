@@ -2,7 +2,7 @@
   "id": "/Lord-Of-Mysteries-Ficha/",
   "name": "Ficha Lord of Mysteries",
   "short_name": "Ficha LoM",
-  "start_url": "./index.html",
+  "start_url": "/Ficha-Lord-of-Mysteries/index.html?app=lom",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
